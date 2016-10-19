@@ -84,8 +84,8 @@ class Linkedin extends CI_Controller{
 		$client_id = "78ep5drwkauhpc";
 		$redirect_uri = "http://localhost/~egrava/study_ci2/social_plugin/index.php/linkedin/signin";
 		$state = "i4asiacorp";
-		$token = "";
 		$profile = "";
+		$obj = "";
 		if(!empty($code)){
 
 			$token = $this->_access_token($code);
@@ -97,6 +97,7 @@ class Linkedin extends CI_Controller{
 		$data = array(
 			'auth' => $linkedin . '?response_type=' .$response_type .'&client_id=' . $client_id . '&redirect_uri=' . $redirect_uri . '&state=' . $state,
 			'profile' => $profile,
+			'token' => $obj,
 
 			);
 
@@ -124,5 +125,22 @@ class Linkedin extends CI_Controller{
 		$get_url = "https://api.linkedin.com/v1/people/~:(id,first-name,last-name,headline,picture-url,industry,summary,specialties,email_address,positions:(id,title,summary,start-date,end-date,is-current,company:(id,name,type,size,industry,ticker)),educations:(id,school-name,field-of-study,start-date,end-date,degree,activities,notes),associations,interests,num-recommenders,date-of-birth,publications:(id,title,publisher:(name),authors:(id,name),date,url,summary),patents:(id,title,summary,number,status:(id,name),office:(name),inventors:(id,name),date,url),languages:(id,language:(name),proficiency:(level,name)),skills:(id,skill:(name)),certifications:(id,name,authority:(name),number,start-date,end-date),courses:(id,name,number),recommendations-received:(id,recommendation-type,recommendation-text,recommender),honors-awards,three-current-positions,three-past-positions,volunteer)?format=json&oauth2_access_token=$obj";
 
    		return $this->curl->simple_get($get_url, false, array(CURLOPT_USERAGENT => true));
+	}
+
+	public function share(){
+
+		$url = "https://www.linkedin.com/shareArticle";
+		$post_data = array (
+					'mini'	=> 'true',
+					'title' => 'I4asia',
+					'summary' => 'Where creativity meets genius.',
+					'source' => 'I4asiacorp',
+				);
+
+		
+
+		// die(var_dump($post));
+
+		return $output = $this->curl->simple_get($url, $post_data);
 	}
 }
