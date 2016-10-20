@@ -8,9 +8,11 @@ class Linkedin extends CI_Controller{
 		$this->load->helper('url');
 		$this->load->library('curl');
 		$this->load->library('linkedin_plugin');
+
+
 	}
 
-	public function index(){
+	public function indexs(){
 
 		echo "Instructions";
 
@@ -77,71 +79,47 @@ class Linkedin extends CI_Controller{
 		*/
 	}
 
+	public function index(){
+
+		$client_id = '78ep5drwkauhpc';
+		$client_secret = "qOU6I0UaClSjd4D6";
+		$redirect_uri = 'http://localhost/~egrava/study_ci2/social_plugin/index.php/linkedin/signin';
+
+		// this will get the authorization code;
+
+
+	}
+
 	public function signin(){
 
-		$code = $this->input->get('code');
-		$linkedin = "https://www.linkedin.com/oauth/v2/authorization";
-		$response_type = "code";
-		$client_id = "78ep5drwkauhpc";
-		$redirect_uri = "http://localhost/~egrava/study_ci2/social_plugin/index.php/linkedin/signin";
-		$state = "i4asiacorp";
-		$profile = "";
-		$obj = "";
-		if(!empty($code)){
 
-			$token = $this->_access_token($code);
-			$obj = json_decode($token);
+		$title = "i4asia";
+		$summary = "Sample TItle";
+		$url = "http://www.i4asiacorp.com/";
 
-			$profile = $this->_get_profile($obj->access_token);
-		}
+
+		$client_id = '78ep5drwkauhpc';
+		$client_secret = "qOU6I0UaClSjd4D6";
+		$redirect_uri = 'http://localhost/~egrava/study_ci2/social_plugin/index.php/linkedin/signin';
 
 		$data = array(
-			'auth' => $linkedin . '?response_type=' .$response_type .'&client_id=' . $client_id . '&redirect_uri=' . $redirect_uri . '&state=' . $state,
-			'profile' => $profile,
-			'token' => $obj,
-
+			'sign_in' => $this->linkedin_plugin->signin($client_id, $redirect_uri),
+			'share' => $this->linkedin_plugin->share($title, $summary, $url),
 			);
 
 		$this->load->view('login', $data);
-	}
-
-	public function _access_token($code){
 
 
-		$url = "https://www.linkedin.com/oauth/v2/accessToken";
-		$post_data = array (
-		    "client_id" => "78ep5drwkauhpc",
-		    "client_secret" => "qOU6I0UaClSjd4D6",
-		    "grant_type" => "authorization_code",
-		    'redirect_uri' => 'http://localhost/~egrava/study_ci2/social_plugin/index.php/linkedin/signin',
-		    'code' => $code,
-		);
+		$code = $this->input->get('code');
+		if(!empty($code)){
+			$profile = $this->linkedin_plugin->_access_token($code, $client_id, $client_secret, $redirect_uri);
 
-		return $output = $this->curl->simple_post($url, $post_data);
+			echo $profile;
+
+			//save profile to db
+		}
 
 	}
 
-	public function _get_profile($obj){
 
-		$get_url = "https://api.linkedin.com/v1/people/~:(id,first-name,last-name,headline,picture-url,industry,summary,specialties,email_address,positions:(id,title,summary,start-date,end-date,is-current,company:(id,name,type,size,industry,ticker)),educations:(id,school-name,field-of-study,start-date,end-date,degree,activities,notes),associations,interests,num-recommenders,date-of-birth,publications:(id,title,publisher:(name),authors:(id,name),date,url,summary),patents:(id,title,summary,number,status:(id,name),office:(name),inventors:(id,name),date,url),languages:(id,language:(name),proficiency:(level,name)),skills:(id,skill:(name)),certifications:(id,name,authority:(name),number,start-date,end-date),courses:(id,name,number),recommendations-received:(id,recommendation-type,recommendation-text,recommender),honors-awards,three-current-positions,three-past-positions,volunteer)?format=json&oauth2_access_token=$obj";
-
-   		return $this->curl->simple_get($get_url, false, array(CURLOPT_USERAGENT => true));
-	}
-
-	// public function share(){
-
-	// 	$url = "https://www.linkedin.com/shareArticle";
-	// 	$post_data = array (
-	// 				'mini'	=> 'true',
-	// 				'title' => 'I4asia',
-	// 				'summary' => 'Where creativity meets genius.',
-	// 				'source' => 'I4asiacorp',
-	// 			);
-
-
-
-	// 	// die(var_dump($post));
-
-	// 	return $output = $this->curl->simple_get($url, $post_data);
-	// }
 }

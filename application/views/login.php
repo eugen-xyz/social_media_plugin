@@ -5,26 +5,20 @@
 </head>
 <body>
 
-	<?php
-	if($token != ""){
-		$token =  $token->access_token;
-	}
-	if($profile == "") {
-	?>
-		<a href="<?php echo $auth; ?>">
+
+
+		<a href="<?php echo $sign_in ?>">
 			<img src="<?php echo base_url('uploads/signin.png'); ?>">
 		</a>
+
 		<br /><br />
-	<?php
-	}
-	else{
-		echo $profile;
-	}
 
-		echo $this->linkedin_plugin->share('uploads/linkedin.png');
 
-	?>
+		<a href="<?php echo $share ?>">
+			<img src="<?php echo base_url('uploads/linkedin.png'); ?>">
+		</a>
 
+		<br /><br />
 
 
 
