@@ -6,7 +6,6 @@
 <body>
 
 
-
 		<a href="<?php echo $sign_in ?>">
 			<img src="<?php echo base_url('uploads/signin.png'); ?>">
 		</a>
@@ -14,7 +13,7 @@
 		<br /><br />
 
 
-		<a href="<?php echo $share ?>">
+		<a href="<?php echo $share['share'] ?>" onclick="<?php echo $share['link'] ?>">
 			<img src="<?php echo base_url('uploads/linkedin.png'); ?>">
 		</a>
 

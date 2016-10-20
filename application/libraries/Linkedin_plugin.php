@@ -78,8 +78,13 @@ class Linkedin_plugin{
 		$share .= '&title='.$title.'';
 		$share .= '&summary='.$summary.'';
 		$share .= '&url='.$url.'';
-
-		return $share;
+		$link = "window.open('$share',
+			'Share On LinkedIn', 'width=500, height=600'); return false;";
+		$data = array(
+				'share' => $share,
+				'link' => $link,
+			);
+		return $data;
 
 	}
 
