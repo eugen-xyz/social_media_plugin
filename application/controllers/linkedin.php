@@ -7,6 +7,7 @@ class Linkedin extends CI_Controller{
 		parent::__construct();
 		$this->load->helper('url');
 		$this->load->library('curl');
+		$this->load->library('linkedin_plugin');
 	}
 
 	public function index(){
@@ -127,20 +128,20 @@ class Linkedin extends CI_Controller{
    		return $this->curl->simple_get($get_url, false, array(CURLOPT_USERAGENT => true));
 	}
 
-	public function share(){
+	// public function share(){
 
-		$url = "https://www.linkedin.com/shareArticle";
-		$post_data = array (
-					'mini'	=> 'true',
-					'title' => 'I4asia',
-					'summary' => 'Where creativity meets genius.',
-					'source' => 'I4asiacorp',
-				);
+	// 	$url = "https://www.linkedin.com/shareArticle";
+	// 	$post_data = array (
+	// 				'mini'	=> 'true',
+	// 				'title' => 'I4asia',
+	// 				'summary' => 'Where creativity meets genius.',
+	// 				'source' => 'I4asiacorp',
+	// 			);
 
-		
 
-		// die(var_dump($post));
 
-		return $output = $this->curl->simple_get($url, $post_data);
-	}
+	// 	// die(var_dump($post));
+
+	// 	return $output = $this->curl->simple_get($url, $post_data);
+	// }
 }

@@ -6,32 +6,27 @@
 <body>
 
 	<?php
+	if($token != ""){
 		$token =  $token->access_token;
+	}
 	if($profile == "") {
 	?>
 		<a href="<?php echo $auth; ?>">
 			<img src="<?php echo base_url('uploads/signin.png'); ?>">
 		</a>
-
+		<br /><br />
 	<?php
 	}
 	else{
 		echo $profile;
 	}
 
-
-	$share = "https://www.linkedin.com/shareArticle";
-	$share .= '?mini=true';
-	$share .= '&title=I4asia';
-	$share .= '&summary=Where%20creativity%20meets%20genius.';
-	$share .= '&url=http://www.i4asiacorp.com/';
+		echo $this->linkedin_plugin->share('uploads/linkedin.png');
 
 	?>
 
 
-	<a href="<?php echo $share ?>" onclick="window.open('<?php echo $share;?> ', 'Share to LinkedIn', 'width=500, height=600'); return false;">
-		Share
-	</a>
+
 
 </body>
 </html>
