@@ -81,6 +81,8 @@ class Linkedin extends CI_Controller{
 
 	public function index(){
 
+		echo "ehllo";
+
 		$client_id = '78ep5drwkauhpc';
 		$client_secret = "qOU6I0UaClSjd4D6";
 		$redirect_uri = 'http://localhost/~egrava/study_ci2/social_plugin/index.php/linkedin/signin';

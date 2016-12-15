@@ -2,6 +2,18 @@
 
 class Linkedin_plugin{
 
+	protected $CI;             
+
+	public $redirect_uri = "";
+	public $client_id = "";
+	public $code = "";
+	public $client_secret = "";
+
+	public function __construct(){
+
+        $CI =& get_instance();
+
+    }
 
 	public function signin($client_id, $redirect_uri){
 
@@ -14,6 +26,15 @@ class Linkedin_plugin{
 
 
 	}
+
+
+
+
+
+
+
+
+
 
 	public function _access_token($code, $client_id, $client_secret, $redirect_uri){
 
