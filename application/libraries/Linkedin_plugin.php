@@ -2,36 +2,33 @@
 
 class Linkedin_plugin{
 
-	protected $CI;             
+	protected $CI;                // CodeIgniter instance
 
 	public $redirect_uri = "";
 	public $client_id = "";
 	public $code = "";
 	public $client_secret = "";
 
+	public $oauth_v2 = "https://www.linkedin.com/oauth/v2/authorization";
+	public $response_type = "code";
+	
+
 	public function __construct(){
 
         $CI =& get_instance();
 
+        
+
     }
 
-	public function signin($client_id, $redirect_uri){
+	public function signin($params = array()){
 
-
-		$linkedin = "https://www.linkedin.com/oauth/v2/authorization";
-		$response_type = "code";
 		$state = md5(uniqid('I4asia', true));
-
-		return   $linkedin . '?response_type=' .$response_type .'&client_id=' . $client_id . '&redirect_uri=' . $redirect_uri . '&state=' . $state;
+		
+		return $this->oauth_v2 . '?response_type=' .$this->response_type .'&client_id=' . $params['client_id'] . '&redirect_uri=' . $params['redirect_uri'] . '&state=' . $state;
 
 
 	}
-
-
-
-
-
-
 
 
 
