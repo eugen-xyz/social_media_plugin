@@ -3,6 +3,9 @@
 class Linkedin_plugin{
 
 	protected $CI;     
+	public $title = "";
+	public $summary = "";
+	public $url = "";
 	public $state = "";       
 	public $response_type = "code";
 	protected $code = "";
@@ -23,7 +26,7 @@ class Linkedin_plugin{
     }
 
 
-	public function signin(){
+	public function authenticate(){
 
 		return $this->oauth2_authorization . '?response_type=' .$this->response_type .'&client_id=' . $this->client_id . '&redirect_uri=' . $this->redirect_uri . '&state=' . $this->state;
 
@@ -89,18 +92,12 @@ class Linkedin_plugin{
 
 
 
-
-
-
-
-
-
-	public function share($title, $summary, $url){
+	public function share_article(){
 
 		$share = $this->share_article;
-		$share .= '&title='.$title.'';
-		$share .= '&summary='.$summary.'';
-		$share .= '&url='.$url.'';
+		$share .= '&title='.htmlentities($this->title).'';
+		$share .= '&summary='.htmlentities($this->summary).'';
+		$share .= '&url='.$this->url.'';
 		$link = "window.open('$share',
 			'Share On LinkedIn', 'width=500, height=600'); return false;";
 		$data = array(
@@ -112,21 +109,21 @@ class Linkedin_plugin{
 	}
 
 
-	public function anchor_share($title, $summary, $url, $image = null){
+	// public function anchor_share(){
 
-		$share = $this->share_article;
-		$share .= '&title='.$title.'';
-		$share .= '&summary='.$summary.'';
-		$share .= '&url='.$url.'';
+	// 	$share = $this->share_article;
+	// 	$share .= '&title='.htmlentities($this->title).'';
+	// 	$share .= '&summary='.htmlentities($this->summary).'';
+	// 	$share .= '&url='.$url.'';
 
-		if($image == null){
-			$image = base_url('uploads/linkedin.png');
-		}
+	// 	if($image == null){
+	// 		$image = base_url('uploads/linkedin.png');
+	// 	}
 
 
-		return '<a href="'.$share.'" onclick="window.open(\''.$share.'\', \'Share On LinkedIn\', \'width=500, height=600\'); return false;">
-		 		<img src="'. $image .'">
-		 		</a>';
+	// 	return '<a href="'.$share.'" onclick="window.open(\''.$share.'\', \'Share On LinkedIn\', \'width=500, height=600\'); return false;">
+	// 	 		<img src="'. $image .'">
+	// 	 		</a>';
 
-	}
+	// }
 }

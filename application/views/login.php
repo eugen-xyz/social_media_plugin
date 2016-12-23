@@ -8,7 +8,10 @@
 		<a href="<?php echo $signin ?>">
 			<img src="<?php echo base_url('uploads/signin.png'); ?>">
 		</a>
+
+
 		<br /><br />
+
 
 		<?php 
 
@@ -16,11 +19,20 @@
 
 				echo "<pre>" . $profile . "</pre>";
 			}
+			if(! empty($share)){
+		?>
+
+			<a href="<?php echo $share['share'] ?>" onclick=" <?php echo $share['link'] ?>">Share to LinkedIn</a>
+		
+		<?php 
+			}
 
 		?>
 
 		
 		<br /><br />
+
+
 
 
 
