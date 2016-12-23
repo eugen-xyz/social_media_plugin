@@ -3,20 +3,20 @@
 class Linkedin_plugin{
 
 	protected $CI;     
-	public $title = "";
-	public $summary = "";
-	public $url = "";
+
 	public $state = "";       
 	public $response_type = "code";
+
 	protected $code = "";
 	protected $access_token = "";
 	protected $redirect_uri = _LI_REDIRECT_URI_;
 	protected $client_id = _LI_CLIENT_ID_;
 	protected $client_secret = _LI_CLIENT_SECRET_;
-	public $oauth2_authorization = "https://www.linkedin.com/oauth/v2/authorization";
-	public $oauth2_access_token = "https://www.linkedin.com/oauth/v2/accessToken";
-	public $linkedIn_profile = "https://api.linkedin.com/v1/people/";
-	public $share_article = "https://www.linkedin.com/shareArticle?mini=true";
+
+	private $oauth2_authorization = "https://www.linkedin.com/oauth/v2/authorization";
+	private $oauth2_access_token = "https://www.linkedin.com/oauth/v2/accessToken";
+	private $linkedIn_profile = "https://api.linkedin.com/v1/people/";
+	private $share_article = "https://www.linkedin.com/shareArticle?mini=true";
 	
 
 	public function __construct(){
@@ -92,12 +92,12 @@ class Linkedin_plugin{
 
 
 
-	public function share_article(){
+	public function share_article($title, $summary, $url){
 
 		$share = $this->share_article;
-		$share .= '&title='.htmlentities($this->title).'';
-		$share .= '&summary='.htmlentities($this->summary).'';
-		$share .= '&url='.$this->url.'';
+		$share .= '&title='.htmlentities($title).'';
+		$share .= '&summary='.htmlentities($summary).'';
+		$share .= '&url='.$url.'';
 		$link = "window.open('$share',
 			'Share On LinkedIn', 'width=500, height=600'); return false;";
 		$data = array(
@@ -109,21 +109,26 @@ class Linkedin_plugin{
 	}
 
 
-	// public function anchor_share(){
-
-	// 	$share = $this->share_article;
-	// 	$share .= '&title='.htmlentities($this->title).'';
-	// 	$share .= '&summary='.htmlentities($this->summary).'';
-	// 	$share .= '&url='.$url.'';
-
-	// 	if($image == null){
-	// 		$image = base_url('uploads/linkedin.png');
-	// 	}
+	/*
 
 
-	// 	return '<a href="'.$share.'" onclick="window.open(\''.$share.'\', \'Share On LinkedIn\', \'width=500, height=600\'); return false;">
-	// 	 		<img src="'. $image .'">
-	// 	 		</a>';
+	public function anchor_share(){
 
-	// }
+		$share = $this->share_article;
+		$share .= '&title='.htmlentities($title).'';
+		$share .= '&summary='.htmlentities($summary).'';
+		$share .= '&url='.$url.'';
+
+		if($image == null){
+			$image = base_url('uploads/linkedin.png');
+		}
+
+
+		return '<a href="'.$share.'" onclick="window.open(\''.$share.'\', \'Share On LinkedIn\', \'width=500, height=600\'); return false;">
+		 		<img src="'. $image .'">
+		 		</a>';
+
+	}
+
+	*/
 }

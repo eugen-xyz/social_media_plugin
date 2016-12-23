@@ -80,14 +80,14 @@ class Linkedin extends CI_Controller{
 
 	public function index(){
 
-		$this->linkedin_plugin->title = "i4asia";
-		$this->linkedin_plugin->summary = "Where creativity meets genius";
-		$this->linkedin_plugin->url = "http://www.i4asiacorp.com/";
+		$title = "i4asia";
+		$summary = "Where creativity meets genius";
+		$url = "http://www.i4asiacorp.com/";
 
 		$data = array(
 				'signin' =>  $this->linkedin_plugin->authenticate(),
 				'profile' => $this->linkedin_plugin->get_user_profile(),
-				'share' => $this->linkedin_plugin->share_article(),
+				'share' => $this->linkedin_plugin->share_article($title, $summary, $url),
 			);
 
 		$this->load->view('login', $data);
