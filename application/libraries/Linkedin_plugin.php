@@ -2,97 +2,102 @@
 
 class Linkedin_plugin{
 
-	protected $CI;                // CodeIgniter instance
-
-	public $redirect_uri = "";
-	public $client_id = "";
-	public $code = "";
-	public $client_secret = "";
-
-	public $oauth_v2 = "https://www.linkedin.com/oauth/v2/authorization";
+	protected $CI;     
+	public $state = "";       
 	public $response_type = "code";
+	protected $code = "";
+	protected $access_token = "";
+	protected $redirect_uri = _LI_REDIRECT_URI_;
+	protected $client_id = _LI_CLIENT_ID_;
+	protected $client_secret = _LI_CLIENT_SECRET_;
+	public $oauth2_authorization = "https://www.linkedin.com/oauth/v2/authorization";
+	public $oauth2_access_token = "https://www.linkedin.com/oauth/v2/accessToken";
+	public $linkedIn_profile = "https://api.linkedin.com/v1/people/";
+	public $share_article = "https://www.linkedin.com/shareArticle?mini=true";
 	
 
 	public function __construct(){
 
-        $CI =& get_instance();
-
-        
-
+        $this->CI =& get_instance();
+        $this->state = md5(uniqid('I4asia', true));        
     }
 
-	public function signin($params = array()){
 
-		$state = md5(uniqid('I4asia', true));
-		
-		return $this->oauth_v2 . '?response_type=' .$this->response_type .'&client_id=' . $params['client_id'] . '&redirect_uri=' . $params['redirect_uri'] . '&state=' . $state;
+	public function signin(){
 
+		return $this->oauth2_authorization . '?response_type=' .$this->response_type .'&client_id=' . $this->client_id . '&redirect_uri=' . $this->redirect_uri . '&state=' . $this->state;
 
 	}
 
+	public function get_user_profile(){
 
+		$this->code = $this->CI->input->get('code');
 
+		if( isset($this->code) ){
 
-	public function _access_token($code, $client_id, $client_secret, $redirect_uri){
+			$url = $this->oauth2_access_token;
+			$fields = array (
+			    'client_id' => $this->client_id,
+			    'client_secret' => $this->client_secret,
+			    'grant_type' => 'authorization_code',
+			    'redirect_uri' => $this->redirect_uri,
+			    'code' => $this->code,
+			);
+			$fields_string = "";
 
+			foreach($fields as $key=>$value){
 
-		$url = "https://www.linkedin.com/oauth/v2/accessToken";
-		$fields = array (
-		    "client_id" => $client_id,
-		    "client_secret" => $client_secret,
-		    "grant_type" => "authorization_code",
-		    'redirect_uri' => $redirect_uri,
-		    'code' => $code,
-		);
-		$fields_string = "";
+				$fields_string .= $key.'='.$value.'&';
 
-		foreach($fields as $key=>$value){
+			}
 
-			$fields_string .= $key.'='.$value.'&';
+			rtrim($fields_string, '&');
 
+			$curl = curl_init();
+			curl_setopt($curl,CURLOPT_URL, $url);
+			curl_setopt($curl,CURLOPT_POSTFIELDS, $fields_string);
+			curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+			$token = curl_exec($curl);
+			curl_close($curl);
+
+			$result = json_decode($token, true);
+
+			if( ! isset($result['error'])){
+
+				$this->access_token = $result['access_token'];
+				return $this->_get_user_profile();
+
+			}
 		}
-		rtrim($fields_string, '&');
-
-		$ch = curl_init();
-
-		curl_setopt($ch,CURLOPT_URL, $url);
-		curl_setopt($ch,CURLOPT_POSTFIELDS, $fields_string);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-		$token = curl_exec($ch);
-
-		curl_close($ch);
-
-		$result = json_decode($token, true);
-
-		$obj = $result['access_token'];
-
-
-		return $this->_get_profile($result['access_token']);
 
 	}
 
-	public function _get_profile($obj){
-		$curl = curl_init();
+	private function _get_user_profile(){
 
+		$curl = curl_init();
 		curl_setopt_array($curl, array(
 		    CURLOPT_RETURNTRANSFER => 1,
-		    CURLOPT_URL => 'https://api.linkedin.com/v1/people/~:(id,first-name,last-name,headline,picture-url,industry,summary,specialties,email_address,positions:(id,title,summary,start-date,end-date,is-current,company:(id,name,type,size,industry,ticker)),educations:(id,school-name,field-of-study,start-date,end-date,degree,activities,notes),associations,interests,num-recommenders,date-of-birth,publications:(id,title,publisher:(name),authors:(id,name),date,url,summary),patents:(id,title,summary,number,status:(id,name),office:(name),inventors:(id,name),date,url),languages:(id,language:(name),proficiency:(level,name)),skills:(id,skill:(name)),certifications:(id,name,authority:(name),number,start-date,end-date),courses:(id,name,number),recommendations-received:(id,recommendation-type,recommendation-text,recommender),honors-awards,three-current-positions,three-past-positions,volunteer)?format=json&oauth2_access_token='. $obj,
-		    CURLOPT_USERAGENT => 'Codular Sample cURL Request'
+		    CURLOPT_URL => $this->linkedIn_profile . '~:(id,first-name,maiden-name,last-name,email-address,headline,location,industry,num-connections,summary,specialties,positions,picture-urls::(original),api-standard-profile-request,public-profile-url,site-standard-profile-request)?format=json&oauth2_access_token='. $this->access_token,
+		    CURLOPT_USERAGENT => 'LinkedIn cURL Request'
 		));
 
-		return $resp = curl_exec($curl);
-
+		$response = curl_exec($curl);
 		curl_close($curl);
 
+		return $response;
 	}
+
+
+
+
+
+
 
 
 
 	public function share($title, $summary, $url){
 
-		$share = "https://www.linkedin.com/shareArticle";
-		$share .= '?mini=true';
+		$share = $this->share_article;
 		$share .= '&title='.$title.'';
 		$share .= '&summary='.$summary.'';
 		$share .= '&url='.$url.'';
@@ -109,8 +114,7 @@ class Linkedin_plugin{
 
 	public function anchor_share($title, $summary, $url, $image = null){
 
-		$share = "https://www.linkedin.com/shareArticle";
-		$share .= '?mini=true';
+		$share = $this->share_article;
 		$share .= '&title='.$title.'';
 		$share .= '&summary='.$summary.'';
 		$share .= '&url='.$url.'';

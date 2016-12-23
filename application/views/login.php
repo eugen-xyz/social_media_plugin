@@ -5,18 +5,21 @@
 </head>
 <body>
 
-
-		<a href="<?php echo $oauth ?>">
+		<a href="<?php echo $signin ?>">
 			<img src="<?php echo base_url('uploads/signin.png'); ?>">
 		</a>
-
 		<br /><br />
 
+		<?php 
 
-		<!-- <a href="<?php echo $share['share'] ?>" onclick="<?php echo $share['link'] ?>">
-			<img src="<?php echo base_url('uploads/linkedin.png'); ?>">
-		</a> -->
+			if(! empty($profile)){
 
+				echo "<pre>" . $profile . "</pre>";
+			}
+
+		?>
+
+		
 		<br /><br />
 
 

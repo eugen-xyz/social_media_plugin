@@ -37,5 +37,10 @@ define('FOPEN_WRITE_CREATE_STRICT',				'xb');
 define('FOPEN_READ_WRITE_CREATE_STRICT',		'x+b');
 
 
+define('_LI_CLIENT_ID_', '81oomg3yh8kddm');
+define('_LI_CLIENT_SECRET_', 'mQxEeAPFRjEdKA2j');
+define('_LI_REDIRECT_URI_', 'http://localhost:8081/i4rnd/social_media_plugin/');
+
+
 /* End of file constants.php */
 /* Location: ./application/config/constants.php */

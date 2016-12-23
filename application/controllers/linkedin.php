@@ -6,7 +6,7 @@ class Linkedin extends CI_Controller{
 
 		parent::__construct();
 		$this->load->helper('url');
-		$this->load->library('curl');
+		// $this->load->library('curl');
 		$this->load->library('linkedin_plugin');
 
 
@@ -81,20 +81,14 @@ class Linkedin extends CI_Controller{
 
 	public function index(){
 
-		$params = array(
-				'client_id' => '81oomg3yh8kddm',
-				'client_secret' => "mQxEeAPFRjEdKA2j",
-				'redirect_uri' => 'http://localhost:8081/i4rnd/social_media_plugin/index.php/linkedin/',
+
+		$data = array(
+				'signin' =>  $this->linkedin_plugin->signin(),
+				'profile' => $this->linkedin_plugin->get_user_profile(),
 			);
 
-		$data['oauth'] = $this->linkedin_plugin->signin($params);
-
 		$this->load->view('login', $data);
-
 		
-
-		// this will get the authorization code;
-
 
 	}
 
