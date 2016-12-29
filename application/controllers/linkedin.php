@@ -6,7 +6,13 @@ class Linkedin extends CI_Controller{
 
 		parent::__construct();
 		$this->load->helper('url');
-		$this->load->library('linkedin_plugin');
+		$this->load->library('linkedin_plugin', array(
+				'redirect_uri' => _LI_REDIRECT_URI_,
+				'client_id' => _LI_CLIENT_ID_,
+				'client_secret' => _LI_CLIENT_SECRET_,
+				'company_id' => "2414183", // "13223343", // 
+				'update_key' => "UPDATE-c2414183-6220077225660674048",
+			));
 
 
 	}
@@ -90,6 +96,9 @@ class Linkedin extends CI_Controller{
 				'share' => $this->linkedin_plugin->share_article($title, $summary, $url),
 			);
 
+		$share = $this->linkedin_plugin->follower_stats();
+
+		echo $share;
 		$this->load->view('login', $data);
 		
 
