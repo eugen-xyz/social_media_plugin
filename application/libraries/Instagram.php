@@ -62,8 +62,7 @@ class Instagram{
                
         $this->state = md5(uniqid('I4asia', true)); 
 
-        
-               
+                
     }
 
     protected function initialize($params){
