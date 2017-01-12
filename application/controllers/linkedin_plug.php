@@ -1,12 +1,12 @@
 <?php
 
-class Linkedin extends CI_Controller{
+class Linkedin_plug extends CI_Controller{
 
 	public function __construct(){
 
 		parent::__construct();
 		$this->load->helper('url');
-		$this->load->library('linkedin_plugin', array(
+		$this->load->library('linkedin', array(
 				'redirect_uri' => _LI_REDIRECT_URI_,
 				'client_id' => _LI_CLIENT_ID_,
 				'client_secret' => _LI_CLIENT_SECRET_,
@@ -91,12 +91,12 @@ class Linkedin extends CI_Controller{
 		$url = "http://www.i4asiacorp.com/";
 
 		$data = array(
-				'signin' =>  $this->linkedin_plugin->authenticate(),
-				'profile' => $this->linkedin_plugin->get_user_profile(),
-				'share' => $this->linkedin_plugin->share_article($title, $summary, $url),
+				'signin' =>  $this->linkedin->authenticate(),
+				'profile' => $this->linkedin->get_user_profile(),
+				'share' => $this->linkedin->share_article($title, $summary, $url),
 			);
 
-		$share = $this->linkedin_plugin->follower_stats();
+		$share = $this->linkedin->follower_stats();
 
 		echo $share;
 		$this->load->view('login', $data);

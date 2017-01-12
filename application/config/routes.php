@@ -38,7 +38,7 @@
 |
 */
 
-$route['default_controller'] = "linkedin";
+$route['default_controller'] = "instagram_plug";
 $route['404_override'] = '';
 
 

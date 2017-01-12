@@ -1,6 +1,6 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Linkedin_plugin{
+class Linkedin{
 
 	protected $CI;     
 
@@ -27,6 +27,7 @@ class Linkedin_plugin{
         if ( ! empty($params)) $this->initialize($params);
 
         $this->CI =& get_instance();
+        $this->CI->load->library('session');
         $this->state = md5(uniqid('I4asia', true)); 
                
     }
