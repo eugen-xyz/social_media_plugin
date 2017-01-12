@@ -76,53 +76,22 @@ class Instagram{
     }
 
 
-     /*
-    	destroy session/access token
+    protected function get_curl($curlopt_url){
 
-    */
+		$curl = curl_init();
+		curl_setopt_array($curl, array(
+		    CURLOPT_RETURNTRANSFER => 1,
+		    CURLOPT_URL => $curlopt_url,
+		    CURLOPT_USERAGENT => 'Instagram cURL Request'
+		));
 
-    public function logout(){
+		$response = curl_exec($curl);
+		curl_close($curl);
 
-    	$this->CI->session->sess_destroy();
-    	$base = $this->base_url;
-    	redirect($base);
+		return $response;
+	}
 
-    }
-
-    /*
-    	This returns authentication url to
-		get code from instagram
-
-    */
-
-    public function authenticate(){
-
-
-     	if($this->CI->input->get('code')){
-    			
-    		$this->CI->session->set_userdata("access_code", $this->CI->input->get('code'));
-
-    		$access_token = $this->generate_access_token();
-
-    		$this->CI->session->set_userdata("access_token", $access_token);
-
-    		$this->access_token = $this->CI->session->userdata("access_token");
-
-    	} else {
-
-	    	$login_url = $this->_api_urls['login_url'] . $this->client_id;
-			$login_url .= '&redirect_uri=' . $this->redirect_uri;
-			$login_url .= '&response_type=code';
-			$login_url .= '&scope=' . $this->scope;
-			$login_url .= '&state=' . $this->state;
-		
-			return $login_url;
-		}
-
-    }
-
-
-    /*
+	/*
     	generate access token and save it to sesssion
 
     */
@@ -168,6 +137,46 @@ class Instagram{
 		
 	}
 
+    /*
+    	This returns authentication url to
+		get code from instagram
+
+    */
+
+    public function authenticate(){
+
+
+     	if($this->CI->input->get('code')){
+    			
+    		$this->CI->session->set_userdata("access_code", $this->CI->input->get('code'));
+      		$this->CI->session->set_userdata("access_token", $this->generate_access_token());
+    	} 
+
+
+    	$login_url = $this->_api_urls['login_url'] . $this->client_id;
+		$login_url .= '&redirect_uri=' . $this->redirect_uri;
+		$login_url .= '&response_type=code';
+		$login_url .= '&scope=' . $this->scope;
+		$login_url .= '&state=' . $this->state;
+	
+		return $login_url;
+		
+
+    }
+
+    /*
+    	destroy session/access token
+
+    */
+
+    public function logout(){
+
+    	$this->CI->session->sess_destroy();
+    	$base = $this->base_url;
+    	redirect($base);
+
+    }
+   
 
 	/*
     	returns user id
@@ -176,7 +185,7 @@ class Instagram{
 
 	public function get_user_id(){
 
-		$url = sprintf($this->_api_urls['self'], $this->access_token);
+		$url = sprintf($this->_api_urls['self'], $this->CI->session->userdata("access_token"));
 
 		$user_id = json_decode($this->get_curl($url));
 
@@ -192,26 +201,13 @@ class Instagram{
 
 	public function get_user(){
 
-		$url = sprintf($this->_api_urls['self'], $this->access_token);
+		$url = sprintf($this->_api_urls['self'], $this->CI->session->userdata("access_token"));
 
 		return $this->get_curl($url);
 	}
 
 
 
-	protected function get_curl($curlopt_url){
-
-		$curl = curl_init();
-		curl_setopt_array($curl, array(
-		    CURLOPT_RETURNTRANSFER => 1,
-		    CURLOPT_URL => $curlopt_url,
-		    CURLOPT_USERAGENT => 'Instagram cURL Request'
-		));
-
-		$response = curl_exec($curl);
-		curl_close($curl);
-
-		return $response;
-	}
+	
     
 }

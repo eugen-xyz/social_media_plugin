@@ -21,10 +21,10 @@ class Instagram_plug extends CI_Controller{
 		
 		$data['login'] = $this->instagram->authenticate();
 
-		if(! empty($this->instagram->access_token)){
+		// if(! empty($this->instagram->access_token)){
 
 			$data['user_id'] = $this->instagram->get_user();
-		}
+		// }
 
 		$data['logout'] = "index.php/instagram_plug/logout";
 
