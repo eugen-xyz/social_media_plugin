@@ -78,25 +78,6 @@ class Linkedin{
 		return json_decode($contents);
     }
 
- //    protected function call_api($curlopt_url){
-
-	// 	$curl = curl_init();
-	// 	curl_setopt_array($curl, array(
-	// 	    CURLOPT_RETURNTRANSFER => 1,
-	// 	    CURLOPT_URL => $curlopt_url,
-	// 	    CURLOPT_USERAGENT => 'Instagram cURL Request'
-	// 	));
-
-	// 	$response = curl_exec($curl);
-	// 	curl_close($curl);
-
-	// 	return json_decode($response);
-	// }
-
-	/*
-    	generate access token and save it to sesssion
-
-    */
 
 	private function generate_access_token(){
 
