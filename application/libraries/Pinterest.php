@@ -1,6 +1,6 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Linkedin{
+class Pinterest{
 
 	protected $CI;     
 
@@ -14,19 +14,20 @@ class Linkedin{
 	protected $redirect_uri = "";
 	protected $client_id = "";
 	protected $client_secret = "";
+	public $scope = "read_public+write_public+read_relationships+write_relationships";
 
-	private $oauth2_authorization = "https://www.linkedin.com/oauth/v2/authorization";
-	private $oauth2_access_token = "https://www.linkedin.com/oauth/v2/accessToken";
-	private $linkedIn_profile = "https://api.linkedin.com/v1/people/";
-	private $linkedIn_company = "https://api.linkedin.com/v1/companies/";
-	private $share_article = "https://www.linkedin.com/shareArticle?mini=true";
+	// private $oauth2_authorization = "https://api.pinterest.com/oauth/";
+	// private $oauth2_access_token = "https://www.linkedin.com/oauth/v2/accessToken";
+	// private $linkedIn_profile = "https://api.linkedin.com/v1/people/";
+	// private $linkedIn_company = "https://api.linkedin.com/v1/companies/";
+	// private $share_article = "https://www.linkedin.com/shareArticle?mini=true";
 
 
 	private $_api_urls = array(
 
-			'oauth2_authorization' => "https://www.linkedin.com/oauth/v2/authorization/",
-			'oauth2_access_token' => "https://www.linkedin.com/oauth/v2/accessToken",
-			'linkedIn_profile' => "https://api.linkedin.com/v1/people/",
+			'oauth2_authorization' => "https://api.pinterest.com/oauth/",
+			'oauth2_access_token' => "https://api.pinterest.com/v1/oauth/token",
+			'pinterest_profile' => "https://api.pinterest.com/v1/me/",
 		);
 	
 
@@ -186,26 +187,26 @@ class Linkedin{
 
 
 
-    public function post($params = array()){
+  //   public function post($params = array()){
 
-    	$url = 'https://api.linkedin.com/v1/companies/'.$this->company_id.'/shares?format=json&oauth2_access_token=';
-    	$url .= $this->CI->session->userdata("access_token");
+  //   	$url = 'https://api.linkedin.com/v1/companies/'.$this->company_id.'/shares?format=json&oauth2_access_token=';
+  //   	$url .= $this->CI->session->userdata("access_token");
 
    
-    	$data = '{
-			    "visibility": { "code": "'.$params["code"].'" },
-			    "comment": "'.$params["comment"].'",
-			    "content": {
-			       "submitted-­url": "'.$params["submitted-­url"].'",
-			       "title": "'.$params["title"].'",
-			       "description": "'.$params["description"].'",
-			       "submitted‐image-­url": "'.$params["submitted‐image-­url"].'"
-			    }
-			}';
+  //   	$data = '{
+		// 	    "visibility": { "code": "'.$params["code"].'" },
+		// 	    "comment": "'.$params["comment"].'",
+		// 	    "content": {
+		// 	       "submitted-­url": "'.$params["submitted-­url"].'",
+		// 	       "title": "'.$params["title"].'",
+		// 	       "description": "'.$params["description"].'",
+		// 	       "submitted‐image-­url": "'.$params["submitted‐image-­url"].'"
+		// 	    }
+		// 	}';
 
-		return $this->call_api($url, $data);
+		// return $this->call_api($url, $data);
 
-    }
+  //   }
 
 
 
@@ -215,8 +216,8 @@ class Linkedin{
 
 	public function get_user_profile(){
 
-		$url = $this->_api_urls['linkedIn_profile'];
-		$url .= '~:(id,first-name,maiden-name,last-name,email-address,headline,location,industry,num-connections,summary,specialties,positions,picture-urls::(original),api-standard-profile-request,public-profile-url,site-standard-profile-request)?format=json&oauth2_access_token=';
+		$url = $this->_api_urls['pinterest_profile'];
+		$url .= 'oauth2_access_token=';
 		$url .= $this->CI->session->userdata("access_token");
 
 		return $this->call_api($url);
