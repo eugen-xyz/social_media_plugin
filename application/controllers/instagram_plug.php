@@ -17,33 +17,33 @@ class Instagram_plug extends CI_Controller{
 	
 	public function index(){
 
-		// die($this->instagram->authenticate());
-
-		
 		$data['login'] = $this->instagram->authenticate();
-
-		// if(! empty($this->instagram->access_token)){
-
-			// $data['user_id'] = $this->instagram->user_follows('3970210560');
+		$data['logout'] = "instagram_plug/unset";
+		$data['home'] = base_url();
 		$data['user_id'] = $this->instagram->get_self();
-		// }
+		$data['media'] = $this->instagram->self_media_recent();
+		$data['follows'] = $this->instagram->user_follows('4155759310'); //3970210560
+		//1947684413 lim sungjin
+		$data['tags_search'] = $this->instagram->tags_search('seventeencarat');
 
-		// echo $this->session->userdata('access_token');
+		$data['tags'] = $this->instagram->tags('seventeencarat');
 
 
-		// echo print_r($data['user_id']);
 
-		$data['logout'] = "index.php/instagram_plug/logout";
-
-		$this->load->view('insta', $data);
+		$this->load->view('instagram', $data);
 
 	}
 
 
 	public function logout(){
 
+		$this->instagram->logout('index.php/instagram_plug');
+	}
 
-		$this->instagram->logout();
+	public function unset(){
+
+
+		$this->instagram->logout('index.php/instagram_plug');
 	}
 
 

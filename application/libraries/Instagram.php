@@ -27,15 +27,15 @@ class Instagram{
 		'user_media_recent'			=> 'https://api.instagram.com/v1/users/%s/media/recent/?access_token=%s',
 		'user_search'               => 'https://api.instagram.com/v1/users/search?q=%s&access_token=%s',
 		'self_liked'				=> 'https://api.instagram.com/v1/users/self/media/liked?access_token=%s&scope=%s',
-		'user_follows'				=> 'https://api.instagram.com/v1/users/%s/follows?access_token=%s',
+		'user_follows'				=> 'https://api.instagram.com/v1/users/%s/relationship?access_token=%s&scope=%s',
+		'tags'                      => 'https://api.instagram.com/v1/tags/%s?access_token=%s',
+		'tags_search'               => 'https://api.instagram.com/v1/tags/search?q=%s&access_token=%s',
 		
 
 
 
 		'user_feed'                 => 'https://api.instagram.com/v1/users/self/feed?access_token=%s&count=%s&min_id=%s&man_id=%s',
 		'user_recent'               => 'https://api.instagram.com/v1/users/%s/media/recent/?access_token=%s&count=%s&max_id=%s&min_id=%s&max_timestamp=%s&min_timestamp=%s',
-		
-		
 		'user_followed_by'          => 'https://api.instagram.com/v1/users/%s/followed-by?access_token=%s&scope=%s',
 		'user_requested_by'         => 'https://api.instagram.com/v1/users/self/requested-by?access_token=%s',
 		'user_relationship'         => 'https://api.instagram.com/v1/users/%s/relationship?access_token=%s',
@@ -51,9 +51,9 @@ class Instagram{
 		'post_like'                 => 'https://api.instagram.com/v1/media/%s/likes?access_token=%s',
 		'remove_like'               => 'https://api.instagram.com/v1/media/%s/likes?access_token=%s',
 		
-		'tags'                      => 'https://api.instagram.com/v1/tags/%s?access_token=%s',
+		
 		'tags_recent'               => 'https://api.instagram.com/v1/tags/%s/media/recent?max_id=%s&min_id=%s&access_token=%s',
-		'tags_search'               => 'https://api.instagram.com/v1/tags/search?q=%s&access_token=%s',
+		
 		'locations'                 => 'https://api.instagram.com/v1/locations/%d?access_token=%s',
 		'locations_recent'          => 'https://api.instagram.com/v1/locations/%d/media/recent/?max_id=%s&min_id=%s&max_timestamp=%s&min_timestamp=%s&access_token=%s',
 		'locations_search'          => 'https://api.instagram.com/v1/locations/search?lat=%s&lng=%s&foursquare_id=%s&distance=%s&access_token=%s',
@@ -89,14 +89,9 @@ class Instagram{
 
 
 
-
-
-
-
-
     public function user_follows($user_id){
 
-    	$url = sprintf($this->_api_urls['user_follows'], $user_id, $this->CI->session->userdata("access_token"), $this->scope);
+    	$url = sprintf($this->_api_urls['user_follows'], $user_id, $this->CI->session->userdata("instagram_access_token"), $this->scope);
 
 		return $this->get_curl($url);
 
@@ -105,22 +100,11 @@ class Instagram{
 
     public function self_liked(){
 
-    	$url = sprintf($this->_api_urls['self_liked'], $this->CI->session->userdata("access_token"), $this->scope);
+    	$url = sprintf($this->_api_urls['self_liked'], $this->CI->session->userdata("instagram_access_token"), $this->scope);
 
 		return $this->get_curl($url);
 
     }
-
-
-
-
-
-
-   
-
-
-
-
 
 
 
@@ -194,10 +178,10 @@ class Instagram{
     public function authenticate(){
 
     	
-     	if($this->CI->input->get('code') AND empty ($this->CI->session->userdata("access_token"))){
+     	if($this->CI->input->get('code') AND empty ($this->CI->session->userdata("instagram_access_token"))){
     			
     		$this->CI->session->set_userdata("access_code", $this->CI->input->get('code'));
-      		$this->CI->session->set_userdata("access_token", $this->generate_access_token());
+      		$this->CI->session->set_userdata("instagram_access_token", $this->generate_access_token());
     	} 
 	    
 
@@ -217,13 +201,24 @@ class Instagram{
 
     */
 
-    public function logout(){
+    public function logout($redirect){
 
     	$this->CI->session->sess_destroy();
-    	$base = $this->base_url;
+    	$base = $this->base_url . $redirect;
     	redirect($base);
 
     }
+
+
+    public function unset($redirect){
+
+    	$this->CI->session->unset_userdata("instagram_access_token");
+    	$base = $this->base_url . $redirect;
+    	redirect($base);
+
+    }
+
+
    
 
 	/*
@@ -233,12 +228,32 @@ class Instagram{
 
 	public function get_self_id(){
 
-		$url = sprintf($this->_api_urls['self'], $this->CI->session->userdata("access_token"));
+		$url = sprintf($this->_api_urls['self'], $this->CI->session->userdata("instagram_access_token"));
 
 		$user_id = $this->get_curl($url);
 
 		return $user_id->data->id;
 
+	}
+
+	//oky
+	public function tags($tag_name){
+
+
+		$url = sprintf($this->_api_urls['tags'], $tag_name, $this->CI->session->userdata("instagram_access_token"));
+
+		return $this->get_curl($url);
+	}
+
+
+	
+	// okay
+	public function tags_search($tags_search){
+
+
+		$url = sprintf($this->_api_urls['tags_search'], $tags_search, $this->CI->session->userdata("instagram_access_token"));
+
+		return $this->get_curl($url);
 	}
 
 	/*
@@ -249,7 +264,7 @@ class Instagram{
 
 	public function get_self(){
 
-		$url = sprintf($this->_api_urls['self'], $this->CI->session->userdata("access_token"));
+		$url = sprintf($this->_api_urls['self'], $this->CI->session->userdata("instagram_access_token"));
 
 		return $this->get_curl($url);
 	}
@@ -260,7 +275,7 @@ class Instagram{
 
     public function user_search($user_name){
 
-    	$url = sprintf($this->_api_urls['user_search'] ,$user_name ,$this->CI->session->userdata("access_token"));
+    	$url = sprintf($this->_api_urls['user_search'] ,$user_name ,$this->CI->session->userdata("instagram_access_token"));
 
 		return $this->get_curl($url);
 
@@ -271,7 +286,7 @@ class Instagram{
 
     public function user_media_recent($user_id){
 
-    	$url = sprintf($this->_api_urls['user_media_recent'] ,$user_id ,$this->CI->session->userdata("access_token"));
+    	$url = sprintf($this->_api_urls['user_media_recent'] ,$user_id ,$this->CI->session->userdata("instagram_access_token"));
 
 		return $this->get_curl($url);
 
@@ -282,7 +297,7 @@ class Instagram{
 
     public function user($user_id){
 
-    	$url = sprintf($this->_api_urls['user'], $user_id ,$this->CI->session->userdata("access_token"));
+    	$url = sprintf($this->_api_urls['user'], $user_id ,$this->CI->session->userdata("instagram_access_token"));
 
 		return $this->get_curl($url);
 
@@ -298,7 +313,7 @@ class Instagram{
 
     public function self_media_recent(){
 
-		$url = sprintf($this->_api_urls['self_media_recent'], $this->CI->session->userdata("access_token"));
+		$url = sprintf($this->_api_urls['self_media_recent'], $this->CI->session->userdata("instagram_access_token"));
 
 		return $this->get_curl($url);
 		

@@ -18,20 +18,20 @@ class Linkedin_plug extends CI_Controller{
 	}
 
 
-	public function post(){
+	// public function post(){
 
-		$data = array(
-				'code' => 'anyone',
-				'comment' => 'I4asia Website', 
-				'submitted-­url' => 'http://i4asiacorp.com/',
-				'title' => 'i4asiacorp',
-				'description' => 'Where creativity meets genius',
-				'submitted‐image-­url' => 'http://i4asiacorp.com/assets/images/og/home.jpg',
-			);
+	// 	$data = array(
+	// 			'code' => 'anyone',
+	// 			'comment' => 'I4asia Website', 
+	// 			'submitted-­url' => 'http://i4asiacorp.com/',
+	// 			'title' => 'i4asiacorp',
+	// 			'description' => 'Where creativity meets genius',
+	// 			'submitted‐image-­url' => 'http://i4asiacorp.com/assets/images/og/home.jpg',
+	// 		);
 
 
-		$this->linkedin->post($data);
-	}
+	// 	$this->linkedin->post($data);
+	// }
 	
 
 
@@ -40,7 +40,7 @@ class Linkedin_plug extends CI_Controller{
 
 
 		$data['login'] = $this->linkedin->authenticate();
-		$data['logout'] = "linkedin_plug/logout";
+		$data['logout'] = "linkedin_plug/unset";
 		$data['home'] = base_url();
 
 		$data['get_user_profile'] = $this->linkedin->get_user_profile();
@@ -86,6 +86,12 @@ class Linkedin_plug extends CI_Controller{
 	
 
 	public function logout(){
+
+
+		$this->linkedin->logout('index.php/linkedin_plug');
+	}
+
+	public function unset(){
 
 
 		$this->linkedin->logout('index.php/linkedin_plug');

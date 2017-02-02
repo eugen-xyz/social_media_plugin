@@ -133,10 +133,10 @@ class Linkedin{
 
 	public function authenticate(){
     	
-     	if($this->CI->input->get('code') AND empty ($this->CI->session->userdata("access_token"))){
+     	if($this->CI->input->get('code') AND empty ($this->CI->session->userdata("linkedin_access_token"))){
     			
     		$this->CI->session->set_userdata("access_code", $this->CI->input->get('code'));
-      		$this->CI->session->set_userdata("access_token", $this->generate_access_token());
+      		$this->CI->session->set_userdata("linkedin_access_token", $this->generate_access_token());
     	} 
 		
 	   
@@ -165,12 +165,20 @@ class Linkedin{
 
     }
 
+     public function unset($redirect){
+
+    	$this->CI->session->unset_userdata("linkedin_access_token");
+    	$base = $this->base_url . $redirect;
+    	redirect($base);
+
+    }
+
 
 
     public function post($params = array()){
 
     	$url = 'https://api.linkedin.com/v1/companies/'.$this->company_id.'/shares?format=json&oauth2_access_token=';
-    	$url .= $this->CI->session->userdata("access_token");
+    	$url .= $this->CI->session->userdata("linkedin_access_token");
 
    
     	$data = '{
@@ -198,7 +206,7 @@ class Linkedin{
 
 		$url = $this->_api_urls['linkedIn_profile'];
 		$url .= '~:(id,first-name,maiden-name,last-name,email-address,headline,location,industry,num-connections,summary,specialties,positions,picture-urls::(original),api-standard-profile-request,public-profile-url,site-standard-profile-request)?format=json&oauth2_access_token=';
-		$url .= $this->CI->session->userdata("access_token");
+		$url .= $this->CI->session->userdata("linkedin_access_token");
 
 		return $this->call_api($url);
 	
@@ -208,7 +216,7 @@ class Linkedin{
 
 	public function company_sharing_enabled(){
 		
-		$url = $this->linkedIn_company . $this->company_id.'/is-company-share-enabled?oauth2_access_token=' . $this->CI->session->userdata("access_token").'&format=json';
+		$url = $this->linkedIn_company . $this->company_id.'/is-company-share-enabled?oauth2_access_token=' . $this->CI->session->userdata("linkedin_access_token").'&format=json';
 
 		return $this->call_api($url);
 
@@ -218,7 +226,7 @@ class Linkedin{
 
 	public function member_is_admin(){
 		
-		$url = $this->linkedIn_company . $this->company_id.'/relation-to-viewer/is-company-share-enabled?oauth2_access_token=' . $this->CI->session->userdata("access_token").'&format=json';
+		$url = $this->linkedIn_company . $this->company_id.'/relation-to-viewer/is-company-share-enabled?oauth2_access_token=' . $this->CI->session->userdata("linkedin_access_token").'&format=json';
 
 		return $this->call_api($url);
 	}
@@ -227,7 +235,7 @@ class Linkedin{
 
 	public function list_all_companies(){
 	
-		$url = $this->linkedIn_company . '?oauth2_access_token=' . $this->CI->session->userdata("access_token").'&format=json&is-company-admin=true';
+		$url = $this->linkedIn_company . '?oauth2_access_token=' . $this->CI->session->userdata("linkedin_access_token").'&format=json&is-company-admin=true';
 
 		return $this->call_api($url);
 	}
@@ -236,7 +244,7 @@ class Linkedin{
 
 	public function get_company_info(){
 		
-		$url =  $this->linkedIn_company . $this->company_id . ':(id,name,ticker,description)?oauth2_access_token=' . $this->CI->session->userdata("access_token").'&format=json';
+		$url =  $this->linkedIn_company . $this->company_id . ':(id,name,ticker,description)?oauth2_access_token=' . $this->CI->session->userdata("linkedin_access_token").'&format=json';
 
 		return $this->call_api($url);
 	
@@ -246,7 +254,7 @@ class Linkedin{
 
 	public function company_follower(){
 
-		$url =  $this->linkedIn_company . $this->company_id . '/num-followers?oauth2_access_token=' . $this->CI->session->userdata("access_token").'&format=json&seniorities=vp,d&jobFunc=it&geos=na.ca';
+		$url =  $this->linkedIn_company . $this->company_id . '/num-followers?oauth2_access_token=' . $this->CI->session->userdata("linkedin_access_token").'&format=json&seniorities=vp,d&jobFunc=it&geos=na.ca';
 
 		return $this->call_api($url);
 
@@ -258,7 +266,7 @@ class Linkedin{
 
 	public function follower_stats(){
 
-		$url =  $this->linkedIn_company . $this->company_id . '/historical-follow-statistics?oauth2_access_token=' . $this->CI->session->userdata("access_token").'&format=json';
+		$url =  $this->linkedIn_company . $this->company_id . '/historical-follow-statistics?oauth2_access_token=' . $this->CI->session->userdata("linkedin_access_token").'&format=json';
 
 		return $this->call_api($url);
 
@@ -270,7 +278,7 @@ class Linkedin{
 	public function company_posts(){
 
 
-		$url =  $this->linkedIn_company . $this->company_id . '/updates?oauth2_access_token=' . $this->CI->session->userdata("access_token").'&format=json';
+		$url =  $this->linkedIn_company . $this->company_id . '/updates?oauth2_access_token=' . $this->CI->session->userdata("linkedin_access_token").'&format=json';
 
 		return $this->call_api($url);
 
@@ -280,7 +288,7 @@ class Linkedin{
 
 	public function specific_company_post(){
 
-		$url =  $this->linkedIn_company . $this->company_id . '/updates/key='. $this->update_key .'?oauth2_access_token=' . $this->CI->session->userdata("access_token").'&format=json';
+		$url =  $this->linkedIn_company . $this->company_id . '/updates/key='. $this->update_key .'?oauth2_access_token=' . $this->CI->session->userdata("linkedin_access_token").'&format=json';
 
 		return $this->call_api($url);
 
@@ -290,7 +298,7 @@ class Linkedin{
 
 	public function comment_for_specific_post(){
 
-		$url =  $this->linkedIn_company . $this->company_id . '/updates/key='. $this->update_key .'/update-comments?oauth2_access_token=' . $this->CI->session->userdata("access_token").'&format=json';
+		$url =  $this->linkedIn_company . $this->company_id . '/updates/key='. $this->update_key .'/update-comments?oauth2_access_token=' . $this->CI->session->userdata("linkedin_access_token").'&format=json';
 
 		return $this->call_api($url);
 
@@ -301,7 +309,7 @@ class Linkedin{
 
 	public function like_for_specific_post(){
 
-		$url =  $this->linkedIn_company . $this->company_id . '/updates/key='. $this->update_key .'/likes?oauth2_access_token=' . $this->CI->session->userdata("access_token").'&format=json';
+		$url =  $this->linkedIn_company . $this->company_id . '/updates/key='. $this->update_key .'/likes?oauth2_access_token=' . $this->CI->session->userdata("linkedin_access_token").'&format=json';
 
 		return $this->call_api($url);
 
